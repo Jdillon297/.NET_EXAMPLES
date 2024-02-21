@@ -1,7 +1,7 @@
-﻿using IdentityApi.Data;
-using IdentityApi.Dtos;
+﻿using IdentityApi.Dtos;
 using IdentityApi.Entities;
 using IdentityApi.Models;
+using IdentityApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,19 +11,18 @@ namespace IdentityApi.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly DataContext context;
+        private readonly BookService bookService;
 
-        public BookController(DataContext context)
+        public BookController(BookService service)
         {
-            this.context = context;
+            this.bookService = service;
         }
 
         [Authorize(Roles = "Admin,User")]
         [HttpGet] 
         public ActionResult<List<Book>> GetAllBooks()
         {
-            var books =  context.Books.ToList();
-            var bookdtos = MapBooksToDtos(books);
+            var bookdtos = bookService.GetAllBooks();
             return Ok(bookdtos);
         }
 
@@ -32,47 +31,21 @@ namespace IdentityApi.Controllers
         public async Task<ActionResult> CreateBook(BookModel book) 
         {
 
-            if (book == null)
+           var bookDto = await bookService.CreateBookAsync(book);   
+            if(bookDto == null)
             {
                 return BadRequest();
             }
-
-            var entity = new Book
-            {
-                Author = book.Author,
-                Description = book.Description,
-                Price = book.Price,
-                Title = book.Title,
-            };
-
-            await context.Books.AddAsync(entity);
-
-            await context.SaveChangesAsync();
-
-            var bookdto = MapBookDto(entity);
-            
-            
-
-            return CreatedAtAction(nameof(CreateBook), book);
+            return CreatedAtAction(nameof(CreateBook), bookDto);
         }
 
-        private static BookDto MapBookDto(Book book)
-        {
-            var bookdto = new BookDto
-            {
-                Id = book.Id,
-                Author = book.Author,
-                Description = book.Description,
-                Price = book.Price,
-                Title = book.Title,
 
-            };
-            return bookdto;
-        }
-
-        private static IEnumerable<BookDto> MapBooksToDtos(IEnumerable<Book> books) 
+        [HttpPut]
+        public async Task<ActionResult<BookDto>> UpdateBook(int bookId,  BookModel book)
         {
-            return books.Select(book => MapBookDto(book));
+            var bookDto = await bookService.UpdateBookAsync(bookId, book);
+
+            return Ok(bookDto);
         }
     }
 }

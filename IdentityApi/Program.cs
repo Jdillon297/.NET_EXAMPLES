@@ -1,5 +1,6 @@
 using IdentityApi.Data;
 using IdentityApi.Entities;
+using IdentityApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer("Serv
 builder.Services.AddIdentity<User,Role>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.AddScoped<BookService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
