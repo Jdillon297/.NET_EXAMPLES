@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityApi.Data;
 
-public class DataContext : IdentityDbContext<User,IdentityRole<int>,int>
+public class DataContext : IdentityDbContext<User,Role,int>
 {
    public DbSet<Book>Books { get; set; }
     public DbSet<Cart> Carts {  get; set; }

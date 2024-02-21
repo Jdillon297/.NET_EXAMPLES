@@ -17,19 +17,49 @@ public static class Seed
 
     private static async Task SeedUsers(IServiceProvider service)
     {
+        const string defaultPassword = "Password123!";
+        const string adminPassword = "HelloWorld123!";
         var userManager = service.GetRequiredService<UserManager<User>>();
+        var roleManager = service.GetRequiredService<RoleManager<Role>>();
 
         if (userManager.Users.Any())
         {
             return;
         }
 
-        var user = new User
+        var adminUser = new User
         {
             UserName = "Jacob"
         };
 
-        await userManager.CreateAsync(user,"Password123!");
+        var user = new User
+        {
+            UserName = "Bob"
+        };
+
+        var adminRole = new Role
+        {
+            Name = "Admin",
+            Description = "Can create books and add to site."
+        };
+
+        var role = new Role
+        {
+            Name = "User",
+            Description ="Can add books to cart to buy."
+        };
+
+        await roleManager.CreateAsync(role);
+        await roleManager.CreateAsync(adminRole);
+
+        await userManager.CreateAsync(adminUser, adminPassword);
+        await userManager.CreateAsync(user,defaultPassword);
+
+        await userManager.AddToRoleAsync(adminUser, adminRole.Name);
+        await userManager.AddToRoleAsync(user, role.Name);
+
+
+
 
         await service.GetRequiredService<DataContext>().SaveChangesAsync();
 

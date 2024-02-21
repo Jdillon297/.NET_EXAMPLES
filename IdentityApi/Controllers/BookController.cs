@@ -1,6 +1,7 @@
 ﻿using IdentityApi.Data;
 using IdentityApi.Dtos;
 using IdentityApi.Entities;
+using IdentityApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +18,7 @@ namespace IdentityApi.Controllers
             this.context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin,User")]
         [HttpGet] 
         public ActionResult<List<Book>> GetAllBooks()
         {
@@ -26,9 +27,9 @@ namespace IdentityApi.Controllers
             return Ok(bookdtos);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<ActionResult> CreateBook(BookDto book) 
+        public async Task<ActionResult> CreateBook(BookModel book) 
         {
 
             if (book == null)
@@ -48,6 +49,9 @@ namespace IdentityApi.Controllers
 
             await context.SaveChangesAsync();
 
+            var bookdto = MapBookDto(entity);
+            
+            
 
             return CreatedAtAction(nameof(CreateBook), book);
         }

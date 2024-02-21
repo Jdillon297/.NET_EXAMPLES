@@ -14,7 +14,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer("Server=DESKTOP-J7FLU2U;Database=myDataBase;Trusted_Connection=True;TrustServerCertificate=True;"));
 
-builder.Services.AddIdentity<User,IdentityRole<int>>()
+builder.Services.AddIdentity<User,Role>()
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
