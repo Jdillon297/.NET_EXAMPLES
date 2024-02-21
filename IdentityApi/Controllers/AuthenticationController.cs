@@ -1,5 +1,4 @@
 ﻿using IdentityApi.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +45,15 @@ namespace IdentityApi.Controllers
             }
             await signInManager.SignInAsync(user, false);
 
+            return Ok();
+        }
+
+
+        [HttpPost("logout")]
+
+        public async Task<IActionResult> Logout()
+        {
+            await this.signInManager.SignOutAsync();
             return Ok();
         }
     }
