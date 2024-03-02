@@ -18,7 +18,7 @@ namespace IdentityApi.Controllers
             this.bookService = service;
         }
 
-        [Authorize(Roles = "Admin,User")]
+        [Authorize(Roles = RoleDealer.ComboRole)]
         [HttpGet] 
         public ActionResult<List<Book>> GetAllBooks()
         {
@@ -26,7 +26,7 @@ namespace IdentityApi.Controllers
             return Ok(bookdtos);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = RoleDealer.AdminRole)]
         [HttpPost]
         public async Task<ActionResult> CreateBook(BookModel book) 
         {
@@ -39,13 +39,21 @@ namespace IdentityApi.Controllers
             return CreatedAtAction(nameof(CreateBook), bookDto);
         }
 
-
+        [Authorize(Roles = RoleDealer.AdminRole)]
         [HttpPut]
         public async Task<ActionResult<BookDto>> UpdateBook(int bookId,  BookModel book)
         {
             var bookDto = await bookService.UpdateBookAsync(bookId, book);
 
             return Ok(bookDto);
+        }
+
+        [Authorize(Roles = RoleDealer.AdminRole)]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteBook(int Bookid)
+        {
+            await bookService.DeleteBookAsync(Bookid);
+            return Ok();
         }
     }
 }

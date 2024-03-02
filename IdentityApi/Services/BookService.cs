@@ -2,7 +2,6 @@
 using IdentityApi.Dtos;
 using IdentityApi.Entities;
 using IdentityApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityApi.Services;
@@ -10,12 +9,12 @@ namespace IdentityApi.Services;
 public class BookService
 {
     private readonly DataContext datacontext;
-    public BookService(DataContext context) 
+    public BookService(DataContext context)
     {
         this.datacontext = context;
     }
 
-
+    
     public IEnumerable<BookDto> GetAllBooks()
     {
         var books = datacontext.Books.ToList();
@@ -64,6 +63,22 @@ public class BookService
 
         return MapBookDto(bookToUpdate);
 
+    }
+
+    public async Task DeleteBookAsync(int bookId)
+    {
+        var bookToDelete = await datacontext.Books.SingleOrDefaultAsync(x => x.Id == bookId);
+
+        if (bookToDelete == null)
+        {
+            await Task.FromException( new Exception("Book was null"));
+            return;
+        }
+       
+         datacontext.Books.Remove(bookToDelete);
+         await datacontext.SaveChangesAsync();
+
+         return;
     }
 
 

@@ -1,6 +1,8 @@
 ﻿using IdentityApi.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace IdentityApi.Controllers
 {
@@ -8,6 +10,9 @@ namespace IdentityApi.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        private const string AdminRole = "Admin";
+        private const string UserRole = "User";
+        private const string ComboRole = "Admin,User";
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
 
@@ -48,7 +53,7 @@ namespace IdentityApi.Controllers
             return Ok();
         }
 
-
+        [Authorize(Roles = RoleDealer.ComboRole)]
         [HttpPost("logout")]
 
         public async Task<IActionResult> Logout()
