@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -13,7 +13,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer("Server=DESKTOP-J7FLU2U;Database=myDataBase;Trusted_Connection=True;TrustServerCertificate=True;"));
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(configuration.GetConnectionString("DataContext")));
 
 builder.Services.AddIdentity<User,Role>()
     .AddEntityFrameworkStores<DataContext>()
