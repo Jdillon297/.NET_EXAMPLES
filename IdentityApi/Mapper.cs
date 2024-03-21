@@ -6,8 +6,6 @@ namespace IdentityApi;
 
 public class Mapper
 {
-
-
     public static UserDto MapToUserDto(User user)
     {
         var userDto = new UserDto
@@ -36,7 +34,7 @@ public class Mapper
         return bookdto;
     }
 
-    public static IEnumerable<BookDto> MapBooksToDtos(IEnumerable<Book> books)
+    public static IEnumerable<BookDto> MapBooksToDtos(IEnumerable<Book?> books)
     {
         return books.Select(book => MapBookDto(book));
     }

@@ -11,7 +11,6 @@ public class Book
 
     public decimal Price { get; set; }
 
-    public Cart? Cart { get; set; }
+    public ICollection<CartBook?> CartBooks { get; set; }  = new List<CartBook?>();
 
-    public int? CartId { get; set; }
 }

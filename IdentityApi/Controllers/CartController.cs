@@ -1,10 +1,9 @@
-﻿using IdentityApi.Data;
-using IdentityApi.Dtos;
+﻿using IdentityApi.Dtos;
 using IdentityApi.Entities;
+using IdentityApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace IdentityApi.Controllers;
 
@@ -13,12 +12,12 @@ namespace IdentityApi.Controllers;
 public class CartController : ControllerBase
 {
     private readonly UserManager<User> userManager;
-    private readonly DataContext dataContext;
+    private readonly CartService cartService;
 
-    public CartController(DataContext dataContext, UserManager<User> userManager)
+    public CartController(UserManager<User> userManager, CartService cartService)
     {
-        this.dataContext = dataContext;
         this.userManager = userManager;
+        this.cartService = cartService;
     }
 
     [Authorize(Roles = RoleDealer.UserRole)]
@@ -26,22 +25,18 @@ public class CartController : ControllerBase
     public async Task<ActionResult<List<BookDto>>> GetAllBooksInCart()
     {
         var user = await userManager.GetUserAsync(User);
+
         if (user == null)
         {
             return BadRequest();
         }
-
-        var cart = dataContext.Carts.Include(x => x.Books)
-                                    .FirstOrDefault(x => x.UserId == user.Id);
-        var Books = cart.Books;
-
-
-        if(Books == null)
+        var Books = cartService.GetAllBooksInCart(user);
+        if (Books == null)
         {
             return BadRequest();
-        }           
+        }
 
-        return Ok(Mapper.MapBooksToDtos(Books));
+        return Ok(Books);
     }
 
 
@@ -50,22 +45,41 @@ public class CartController : ControllerBase
     public async Task<ActionResult<BookDto>> AddBookToCart(int bookId)
     {
         var user = await userManager.GetUserAsync(User);
-        if (user == null)
+        if(user == null)
         {
-            return BadRequest("No User Logged in.");
+            return BadRequest("user is null.");
         }
-        var userCart = await dataContext.Carts.FirstOrDefaultAsync(x => x.UserId == user.Id);
-
-        var bookToAdd = await dataContext.Books.FirstOrDefaultAsync(x => x.Id == bookId);
-
-        if(bookToAdd == null)
+        try
         {
-            return BadRequest("Could not find a book.");
+            await this.cartService.AddBookToCart(user, bookId);
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest($"This is what happened: {ex} ");
         }
 
-        userCart?.Books?.Add(bookToAdd);
+        return Ok();
+    }
+    [Authorize(Roles = RoleDealer.UserRole)]
+    [HttpPut]
+    public async Task<ActionResult> RemoveBookFromCart(int bookId)
+    {
+        var user = await userManager.GetUserAsync(User);
 
-        await dataContext.SaveChangesAsync();
+        if(user == null)
+        {
+            return BadRequest("User is Null");
+        }
+        try
+        {
+            await cartService.RemoveBookFromCart(user, bookId);
+        }
+        catch (Exception ex)
+        {
+
+            return BadRequest($"This is what happened: {ex}");
+        }
 
         return Ok();
     }

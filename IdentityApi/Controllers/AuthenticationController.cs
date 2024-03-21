@@ -33,9 +33,6 @@ namespace IdentityApi.Controllers
             {
                 return BadRequest();
             }
-
-
-
             return Ok(Mapper.MapToUserDto(user));
         }
 

@@ -6,7 +6,7 @@ public class Cart
 
     public decimal? Price { get; set; }
 
-    public List<Book>? Books { get; set; } = new List<Book>();
+    public ICollection<CartBook?> CartBooks { get; set; } = new List<CartBook?>();  
 
     public User? User { get; set; }
 
