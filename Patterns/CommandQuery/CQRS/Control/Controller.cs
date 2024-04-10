@@ -12,7 +12,7 @@ public static class Controller
     public static void Begin()
     {
         var database = Database.GetInstance();
-        
+
         Prompt.ShowWelcomePrompt();
 
         while (true)
@@ -36,10 +36,10 @@ public static class Controller
             }
             else if (input == 4)
             {
-                ICommand command  = new UpdateUserByIdCommand(database);
+                ICommand command = new UpdateUserByIdCommand(database);
                 command.Execute();
             }
-            else if(input == 5)
+            else if (input == 5)
             {
                 IQuery query = new SelectUserByIdQuery(database);
                 var user = query.Execute();
@@ -53,7 +53,7 @@ public static class Controller
             {
 
             }
-           Prompt.ShowPrompt();
+            Prompt.ShowPrompt();
         }
     }
 
@@ -67,10 +67,20 @@ public static class Controller
         var name = Console.ReadLine();
         Console.WriteLine();
         Console.Write("Enter the new Age: ");
-        var age = int.Parse(Console.ReadLine()); 
-        
+        var age = int.Parse(Console.ReadLine());
 
-        return new { UserId = userId, Name = name, Age = age};  
+
+        return new { UserId = userId, Name = name, Age = age };
+    }
+
+    public static object MakeUser()
+    {
+
+        Console.Write("Enter name:  ");
+        var name = Console.ReadLine();
+        Console.Write("Enter age:  ");
+        var age = int.Parse(Console.ReadLine());
+        return new { name, age };
     }
 
     public static int GetSelectedId()
