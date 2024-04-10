@@ -19,10 +19,12 @@ public sealed class InsertUserCommand : ICommand
         Console.Write("Enter name:  ");
         var name = Console.ReadLine();
         Console.Write("Enter age:  ");
-        var age  = int.Parse(Console.ReadLine());   
+        var age = int.Parse(Console.ReadLine());
+
+
 
         var userToAdd = new User() { Id = ++userId, Age = age, Name = name };
 
-        this.database.InsertUser(userToAdd);
+        database.InsertUser(userToAdd);
     }
 }

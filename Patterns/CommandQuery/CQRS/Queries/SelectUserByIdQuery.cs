@@ -17,6 +17,10 @@ public sealed class SelectUserByIdQuery : IQuery
     public User Execute()
     {
         var id = Controller.GetSelectedId();
-        return this.database.FindUserById(id);
+        if (id <= 0)
+        {
+            return null;
+        }
+        return database.FindUserById(id);
     }
 }

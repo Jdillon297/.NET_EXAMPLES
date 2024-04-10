@@ -2,7 +2,7 @@
 
 namespace CommandQuery.CommandQuery.Commands;
 
-public sealed class DeleteUserByIdCommand :ICommand
+public sealed class DeleteUserByIdCommand : ICommand
 {
     private readonly Database database;
     public DeleteUserByIdCommand(Database database)
@@ -16,7 +16,7 @@ public sealed class DeleteUserByIdCommand :ICommand
         Console.WriteLine("Enter Id of a user you wish to delete: ");
         var id = int.Parse(Console.ReadLine());
 
-        var userToDelete = this.database.FindUserById(id);
-        this.database.DeleteUser(userToDelete); 
+        var userToDelete = database.FindUserById(id);
+        database.DeleteUser(userToDelete);
     }
 }
