@@ -11,10 +11,10 @@ public class BookService
     private readonly DataContext datacontext;
     public BookService(DataContext context)
     {
-        this.datacontext = context;
+        datacontext = context;
     }
 
-    
+
     public IEnumerable<BookDto> GetAllBooks()
     {
         var books = datacontext.Books.ToList();
@@ -52,8 +52,8 @@ public class BookService
     public async Task<BookDto> UpdateBookAsync(int bookId, BookModel book)
     {
         var bookToUpdate = await datacontext.Books.SingleOrDefaultAsync(x => x.Id == bookId);
-             
-        
+
+
         bookToUpdate.Author = book.Author;
         bookToUpdate.Description = book.Description;
         bookToUpdate.Price = book.Price;
@@ -71,14 +71,14 @@ public class BookService
 
         if (bookToDelete == null)
         {
-            await Task.FromException( new Exception("Book was null"));
+            await Task.FromException(new Exception("Book was null"));
             return;
         }
-       
-         datacontext.Books.Remove(bookToDelete);
-         await datacontext.SaveChangesAsync();
 
-         return;
+        datacontext.Books.Remove(bookToDelete);
+        await datacontext.SaveChangesAsync();
+
+        return;
     }
 
 

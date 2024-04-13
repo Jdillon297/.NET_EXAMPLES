@@ -1,9 +1,7 @@
 ﻿using IdentityApi.Data;
 using IdentityApi.Dtos;
 using IdentityApi.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace IdentityApi.Services;
 
@@ -11,11 +9,11 @@ public class CartService
 {
     private readonly DataContext dataContext;
 
-    public CartService( DataContext dataContext)
+    public CartService(DataContext dataContext)
     {
-        
+
         this.dataContext = dataContext;
-        
+
     }
     public IEnumerable<BookDto> GetAllBooksInCart(User user)
     {
@@ -40,8 +38,8 @@ public class CartService
         return Mapper.MapBooksToDtos(Books);
     }
 
-    public async Task AddBookToCart(User user,int bookId)
-    {  
+    public async Task AddBookToCart(User user, int bookId)
+    {
         if (user == null)
         {
             return;

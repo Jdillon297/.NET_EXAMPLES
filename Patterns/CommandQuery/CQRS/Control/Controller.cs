@@ -73,16 +73,6 @@ public static class Controller
         return new { UserId = userId, Name = name, Age = age };
     }
 
-    public static object MakeUser()
-    {
-
-        Console.Write("Enter name:  ");
-        var name = Console.ReadLine();
-        Console.Write("Enter age:  ");
-        var age = int.Parse(Console.ReadLine());
-        return new { name, age };
-    }
-
     public static int GetSelectedId()
     {
         Console.Write("Enter the Id of the User you wish to Select: ");
